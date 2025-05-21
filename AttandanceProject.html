@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #35424a;
+            color: white;
+        }
+        .status {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Student Attendance Tracker</h1>
+    <form id="attendanceForm">
+        <div>
+            <label for="studentName">Student Name:</label>
+            <input type="text" id="studentName" required>
+            <button type="button" onclick="addStudent()">Add Student</button>
+        </div>
+    </form>
+
+    <table id="attendanceTable">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Attendance rows will be added here -->
+        </tbody>
+    </table>
+
+    <button onclick="submitAttendance()">Submit Attendance</button>
+
+    <script>
+        const students = [];
+
+        function addStudent() {
+            const studentName = document.getElementById('studentName').value;
+            if (studentName) {
+                students.push({ name: studentName, present: false });
+                document.getElementById('studentName').value = '';
+                renderAttendanceTable();
+            }
+        }
+
+        function renderAttendanceTable() {
+            const tbody = document.getElementById('attendanceTable').querySelector('tbody');
+            tbody.innerHTML = '';
+            students.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td class="status">
+                        <input type="radio" name="status${index}" value="present" onchange="updateStatus(${index}, true)"> Present
+                        <input type="radio" name="status${index}" value="absent" onchange="updateStatus(${index}, false)"> Absent
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateStatus(index, isPresent) {
+            students[index].present = isPresent;
+        }
+
+        function submitAttendance() {
+            const attendanceReport = students.map(student => 
+                `${student.name}: ${student.present ? 'Present' : 'Absent'}`
+            ).join('\n');
+            alert(`Attendance Submitted:\n${attendanceReport}`);
+        }
+    </script>
+
+</body>
+</html>
